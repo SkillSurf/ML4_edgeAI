@@ -169,14 +169,14 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1){
 	  float x = 0.0f;
+	  buf_len = sprintf(buf, "\r\n\r\nStarting inference... \r\n");
+	  HAL_UART_Transmit(&huart3, (uint8_t *)buf, buf_len, 100);
+	  for (int i = 0 ; i < 628; i++){  // Adjust the number 628 to create more sampling points
+		  x = x + 0.01; // 628 x 0.01 = 6.28; Always keep the multiplication to 6.28 to create one sine wave; Try 6280 x 0.001
 
-	  for (int i = 0 ; i < 60; i++){
-		  x = x + 0.1;
-
-
-		  for (uint32_t i = 0; i < AI_SINEWAVE_IN_1_SIZE_BYTES; i++)
+		  for (uint32_t j = 0; j < AI_SINEWAVE_IN_1_SIZE_BYTES; j++)
 			  {
-				((ai_float *)in_data)[i] = (ai_float)x;
+				((ai_float *)in_data)[j] = (ai_float)x;
 			  }
 
 		  nbatch = ai_sinewave_run(network, &ai_input[0], &ai_output[0]);
@@ -191,7 +191,7 @@ int main(void)
 
 		  HAL_UART_Transmit(&huart3, (uint8_t *)buf, buf_len, 100);
 
-		  HAL_Delay (50);
+		  HAL_Delay (10);
     }
 	  while(1);
     /* USER CODE END WHILE */
